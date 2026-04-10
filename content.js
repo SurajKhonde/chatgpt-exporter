@@ -1,6 +1,4 @@
-console.log("✅ content.js loaded");
 
-/* -------------------- 🧹 CLEAN TEXT -------------------- */
 function cleanText(text) {
   return text
     .replace(/\n{3,}/g, "\n\n")
@@ -8,7 +6,6 @@ function cleanText(text) {
     .trim();
 }
 
-/* -------------------- 🔥 MARKDOWN EXTRACTOR -------------------- */
 function extractCleanMarkdown(root) {
   let md = "";
 
@@ -17,10 +14,7 @@ function extractCleanMarkdown(root) {
   );
 
   elements.forEach((el) => {
-    // ❌ جلوگیری duplicate code
     if (el.tagName === "CODE" && el.closest("pre")) return;
-
-    // ✅ HEADINGS
     if (el.tagName === "H1") {
       md += `# ${el.innerText.trim()}\n\n`;
       return;
@@ -36,19 +30,14 @@ function extractCleanMarkdown(root) {
       return;
     }
 
-    // ✅ PARAGRAPH
     if (el.tagName === "P") {
       md += `${el.innerText.trim()}\n\n`;
       return;
     }
-
-    // 🔥 CODE BLOCK (MAIN FIX)
   if (el.tagName === "PRE") {
   let code = "";
 
   const codeEl = el.querySelector("code");
-
-  // ✅ STEP 1: extract raw code safely
   if (codeEl && codeEl.innerText.trim()) {
     code = codeEl.innerText;
   } else {
@@ -57,10 +46,8 @@ function extractCleanMarkdown(root) {
 
   let lang = "text";
 
-  // ✅ STEP 2: split lines
   let lines = code.split("\n").map(l => l.trim());
 
-  // 🔥 STEP 3: detect language from FIRST LINE
   const firstLine = lines[0]?.toLowerCase();
 
   const langMap = {
@@ -79,11 +66,9 @@ function extractCleanMarkdown(root) {
   if (langMap[firstLine]) {
     lang = langMap[firstLine];
 
-    // 🔥 remove language line from code
     lines.shift();
     code = lines.join("\n");
   } else {
-    // ✅ STEP 4: fallback to className
     const className = codeEl?.className || "";
     const match = className.match(/language-(\w+)/);
 
@@ -92,7 +77,7 @@ function extractCleanMarkdown(root) {
     }
   }
 
-  // ✅ FINAL: safe fallback
+  
   if (!lang) lang = "text";
 
   md += `\n\`\`\`${lang}\n${code.trim()}\n\`\`\`\n\n`;
@@ -156,7 +141,6 @@ function getChatMessages() {
 
 /* -------------------- ⬇️ DOWNLOAD -------------------- */
 function downloadMarkdown(content, filename) {
-  console.log("⬇️ Download triggered");
 
   const blob = new Blob([content], { type: "text/markdown" });
   const url = URL.createObjectURL(blob);
@@ -187,7 +171,6 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       sendResponse({ success: true });
     }
   } catch (err) {
-    console.error("🔥 content.js error:", err);
     sendResponse({ success: false });
   }
 
