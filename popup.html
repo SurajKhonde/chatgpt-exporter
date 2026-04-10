@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      width: 260px;
+      padding: 15px;
+      font-family: Arial;
+      background: #111;
+      color: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #4CAF50;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .progress {
+      margin-top: 10px;
+      height: 8px;
+      background: #333;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: #00ffcc;
+    }
+  </style>
+</head>
+
+<body>
+  <h3>Export Chat</h3>
+  <button id="export-md">Download Markdown</button>
+
+  <div class="progress">
+    <div class="bar" id="bar"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
