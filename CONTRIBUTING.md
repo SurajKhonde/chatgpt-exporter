@@ -38,7 +38,7 @@ Click the **Fork** button on GitHub.
 ### 2. Clone Your Fork
 
 ```bash
-git clone https://github.com/your-username/chatgpt-exporter.git
+git clone https://github.com/SurajKhonde/chatgpt-exporter.git
 cd chatgpt-exporter
 ```
 

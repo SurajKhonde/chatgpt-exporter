@@ -1,46 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8"> <!-- FIXES WEIRD TEXT -->
   <style>
     body {
-      width: 260px;
-      padding: 15px;
-      font-family: Arial;
-      background: #111;
-      color: #fff;
+      width: 280px;
+      padding: 16px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e1b4b);
+      color: #f1f5f9;
+    }
+
+    .container {
+      text-align: center;
+      border-radius: 16px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #ec4899, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tagline {
+      font-size: 12px;
+      color: #cbd5f5;
+      margin-bottom: 14px;
     }
 
     button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 10px;
-      background: #4CAF50;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
       border: none;
       color: white;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: 12px; /* SMOOTH CORNERS */
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(236, 72, 153, 0.5);
+    }
+
+    button:active {
+      transform: scale(0.97);
     }
 
     .progress {
-      margin-top: 10px;
-      height: 8px;
-      background: #333;
+      margin-top: 14px;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
     }
 
     .bar {
       height: 100%;
       width: 0%;
-      background: #00ffcc;
+      background: linear-gradient(90deg, #ec4899, #f472b6);
+      transition: width 0.3s ease;
     }
+
+    .footer {
+      margin-top: 12px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
   </style>
 </head>
 
 <body>
-  <h3>Export Chat</h3>
-  <button id="export-md">Download Markdown</button>
+  <div class="container">
+    <h2>ChatGPT Exporter</h2>
+    <div class="tagline">Convert chats into clean Markdown</div>
 
-  <div class="progress">
-    <div class="bar" id="bar"></div>
+    <button id="export-md">⬇ Download Markdown</button>
+
+    <div class="progress">
+      <div class="bar" id="bar"></div>
+    </div>
+
+    <div class="footer">
+      v0.1 • Built with ❤️
+    </div>
   </div>
 
   <script src="popup.js"></script>
