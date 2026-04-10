@@ -18,7 +18,6 @@ document.getElementById("export-md").onclick = async () => {
     });
 
     if (!tab?.id) {
-      console.log("❌ No active tab found");
       running = false;
       return;
     }
@@ -31,7 +30,6 @@ document.getElementById("export-md").onclick = async () => {
     });
 
     if (!response || !response.data || !response.data.length) {
-      console.log("❌ No chat messages found");
       running = false;
       return;
     }
@@ -89,11 +87,8 @@ document.getElementById("export-md").onclick = async () => {
       filename: `${title}.md`,
     });
 
-    console.log("✅ Download response:", downloadRes);
-
     updateBar(100);
   } catch (err) {
-    console.error("🔥 ERROR:", err);
   } finally {
     running = false;
 
