@@ -1,146 +1,167 @@
-# 📘 ChatGPT Exporter
+# ChatGPT Exporter
 
-> Export your ChatGPT conversations into clean Markdown — fast, simple, and reliable.
+> Export your ChatGPT conversations into clean Markdown — even chats with **thousands of messages**.
 
----
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-
-## 🚀 Why I Built This
-
-I often have **long, deep discussions** on ChatGPT — topics like:
-
-* System Design
-* RabbitMQ
-* Architecture decisions
-* Learning notes
-
-Over time, chats become **very long and valuable**.
-
-### ❌ The Problem
-
-* Copy-pasting large chats → **browser freezes**
-* Sometimes copy doesn’t work properly
-* Converting manually to Markdown → **too time-consuming**
-* Hard to maintain structured notes
-
-### ✅ The Solution
-
-So I built **ChatGPT Exporter** —
-A simple Chrome extension that lets you:
-
-👉 Export entire ChatGPT chats into **clean Markdown format** instantly.
+![Version](https://img.shields.io/badge/version-2.0-34d399.svg)
+![Manifest](https://img.shields.io/badge/manifest-v3-3b82f6.svg)
 
 ---
 
-## ✨ Features
+## Why I built this
 
-* 📄 Export ChatGPT chats to Markdown
-* ⚡ Fast and lightweight
-* 🧠 Preserves structure (headings, code blocks, etc.)
-* 🔒 No extra permissions required
-* 🎯 Works directly inside ChatGPT
+I have **long, deep conversations** with ChatGPT — system design, RabbitMQ deep-dives, architecture decisions, learning notes. Over weeks they grow into thousands of messages, and they're genuinely valuable.
 
----
+The problem is getting them **out**:
 
-## 🛠️ How It Works
+- Copy-paste freezes the browser on long chats
+- Sometimes the selection just breaks halfway
+- Manual cleanup into Markdown takes hours
+- ChatGPT's own export feature emails you a giant ZIP, hours or days later, all-or-nothing
 
-1. Install the extension
-2. Open any ChatGPT conversation
-3. Click **"Generate Book"** (Export button)
-4. Done ✅ — your Markdown is ready
+So I built this — a Chrome extension that does it in **one click**, locally, instantly.
 
 ---
 
-## 📦 Use Cases
+## How it works
 
-* Save learning notes
-* Convert chats into documentation
-* Prepare content for blogs/articles
-* Generate PDFs (via Markdown tools)
-* Maintain long-term knowledge base
+The extension gives you **three export modes**, depending on the situation:
+
+### 1. Export Full Chat *(default — use this)*
+Calls ChatGPT's own internal conversation API using your existing login session and pulls the entire conversation in a single request. Works on chats of **any length** — 10 messages or 10,000.
+
+### 2. Export Visible
+Snapshots whatever messages are currently rendered on screen. Fast and simple when you only need the part you're looking at.
+
+### 3. Scroll Capture *(fallback)*
+Auto-captures messages as you scroll through the chat. Uses each message's **stable UUID** to dedupe, so you can scroll up, down, or jump around freely without losing or duplicating anything.
+
+All three save a clean `.md` file directly to your downloads folder.
 
 ---
 
-## 🔮 Roadmap
+## Features
 
-```txt
-- [x] Markdown export
+- One-click export of entire conversations
+- Three modes — full API, visible-only, scroll-capture fallback
+- Preserves structure — headings, code blocks (with language tags), bold/italic, lists, links, inline code
+- Stable UUID-based deduplication — handles ChatGPT's virtualized DOM correctly
+- Keyboard shortcuts in popup (`1` / `2` / `3` / `Enter` / `Esc`)
+- Lightweight — no analytics, no telemetry, no remote code
+- Works on both `chatgpt.com` and `chat.openai.com`
+- Manifest V3, Chrome's current standard
+
+---
+
+## Install
+
+### From the Chrome Web Store
+*Coming soon — pending review.*
+
+### From source (developer mode)
+
+```bash
+git clone https://github.com/SurajKhonde/chatgpt-exporter.git
+```
+
+Then in Chrome:
+
+1. Go to `chrome://extensions`
+2. Toggle **Developer mode** on (top-right)
+3. Click **Load unpacked** and select the cloned folder
+4. Pin the extension to your toolbar
+
+---
+
+## Usage
+
+1. Open any ChatGPT conversation (must be on a `/c/<id>` URL).
+2. Click the extension icon in your toolbar.
+3. Click **Export Full Chat** — or press `1`.
+4. Markdown file downloads instantly.
+
+If the API call fails (rare — usually when ChatGPT changes something), use **Scroll Capture** as fallback: click it, scroll the chat top to bottom, then hit **Stop & Download**.
+
+---
+
+## Privacy
+
+This extension is built with privacy as a first principle:
+
+- **Nothing leaves your browser.** Conversations are read locally and saved directly to your device.
+- **No analytics, no telemetry, no tracking.** Not a single network call to any server we control. We don't have a server.
+- **No remote code execution.** All JavaScript ships bundled in the extension.
+- **Narrow permissions.** Only `activeTab` and `scripting`, only on `chatgpt.com` and `chat.openai.com`.
+- **Your existing session.** The API call uses your already-logged-in cookies; we never see or store credentials.
+
+---
+
+## A note on the API approach
+
+The "Export Full Chat" mode calls `chatgpt.com` — ChatGPT's own internal endpoint, the same one its UI calls every time you open a chat. This isn't a documented public API, and OpenAI's terms broadly discourage automated extraction.
+
+In practice, exporting **your own conversations** through **your own browser session** has been universally tolerated for years (see [pionxzh/chatgpt-exporter](https://github.com/pionxzh/chatgpt-exporter) and similar tools). You're reading data you already have access to, with your own credentials, on your own device.
+
+That said: this is a gray area. The endpoint could change anytime, and at scale OpenAI may rate-limit or block. If you need a fully sanctioned route, ChatGPT's built-in **Settings → Data Controls → Export Data** is the official option (slow, ZIP via email, but bulletproof).
+
+---
+
+## Roadmap
+
+- [x] Markdown export (full chat via API)
+- [x] Scroll-capture fallback with UUID dedup
+- [x] Keyboard shortcuts
+- [x] Three-mode UI
 - [ ] PDF export
-- [ ] TXT export
-- [ ] UI improvements
-- [ ] Multi-format download options
-```
+- [ ] Plain TXT export
+- [ ] JSON export (raw conversation tree)
+- [ ] Batch export (multiple chats at once)
+- [ ] Customizable Markdown templates
+- [ ] Conversation search across exports
 
 ---
 
-## ⚠️ Project Status
+## Tech stack
 
-> This project is under active development.
-
-* Bugs may exist 🐛
-* Improvements are ongoing 🚧
-* Contributions are welcome ❤️
+- Manifest V3 Chrome Extension
+- Vanilla JavaScript (no build step, no dependencies)
+- Single content script + popup
+- Total bundle size: under 20 KB
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Want to improve this project?
+PRs welcome.
 
-```txt
+```text
 1. Fork the repo
-2. Create a new branch
+2. Create a feature branch — git checkout -b feat/something
 3. Make your changes
-4. Submit a Pull Request
+4. Open a Pull Request
 ```
 
-### Good First Issues
+**Good first issues:**
 
-* Fix Markdown formatting edge cases
-* Improve UI/UX
-* Add export formats (PDF, TXT)
-* Optimize performance for large chats
-
----
-
-## 🔐 Privacy
-
-* This extension **only works on ChatGPT**
-* No unnecessary permissions required
-* No data is stored or sent externally
+- Edge cases in the Markdown converter (tables, math, embedded images)
+- Settings UI for customizing output format
+- PDF export
+- i18n for the popup
 
 ---
 
-## ⭐ Support
+## Project status
 
-If you find this useful:
+Actively maintained. Built out of a real problem the author hits daily.
 
-👉 Give it a star ⭐
-👉 Share with others
-
----
-
-## 💡 Future Vision
-
-This is just the beginning.
-
-Goal:
-👉 Turn ChatGPT conversations into **structured knowledge assets**
+Found a bug? [Open an issue](https://github.com/SurajKhonde/chatgpt-exporter/issues).
 
 ---
 
-## 🙌 Final Note
+## License
 
-Built out of a real problem I faced daily.
-
-If you also:
-
-* Learn from ChatGPT
-* Have long conversations
-* Want structured notes
-
-Then this tool is for you.
+[MIT](LICENSE) — do what you want.
 
 ---
 
-**Happy Learning & Building 🚀**
+If this saved you time, a ⭐ goes a long way.

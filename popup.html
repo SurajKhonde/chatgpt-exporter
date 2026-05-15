@@ -1,98 +1,351 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8"> <!-- FIXES WEIRD TEXT -->
-  <style>
-    body {
-      width: 280px;
-      padding: 16px;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #0f172a, #1e1b4b);
-      color: #f1f5f9;
-    }
+<meta charset="UTF-8" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 
-    .container {
-      text-align: center;
-      border-radius: 16px;
-    }
+  :root {
+    --bg:        #08090a;
+    --bg-2:      #101113;
+    --line:      #1d1f23;
+    --line-2:    #2a2d33;
+    --ink:       #e8ecef;
+    --ink-dim:   #8a8f96;
+    --ink-faint: #50555c;
 
-    h2 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-      background: linear-gradient(90deg, #ec4899, #f472b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    --emerald:        #34d399;
+    --emerald-deep:   #059669;
+    --emerald-glow:   rgba(52, 211, 153, .18);
+    --amber:          #fbbf24;
+    --coral:          #fb7185;
 
-    .tagline {
-      font-size: 12px;
-      color: #cbd5f5;
-      margin-bottom: 14px;
-    }
+    --mono: "JetBrains Mono", "SF Mono", "Cascadia Mono", "Menlo",
+            "Consolas", ui-monospace, monospace;
+  }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      background: linear-gradient(135deg, #ec4899, #f43f5e);
-      border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 12px; /* SMOOTH CORNERS */
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 0.25s ease;
-    }
+  html, body {
+    width: 360px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  body {
+    background-image:
+      radial-gradient(circle at 80% -10%, rgba(52, 211, 153, .08), transparent 50%),
+      radial-gradient(circle at -10% 110%, rgba(52, 211, 153, .04), transparent 40%);
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .35;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+  }
 
-    button:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 8px 20px rgba(236, 72, 153, 0.5);
-    }
+  /* Header */
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .mark {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: linear-gradient(160deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+    display: grid; place-items: center;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset,
+                0 4px 12px -2px rgba(52, 211, 153, .35);
+  }
+  .mark svg { width: 16px; height: 16px; }
+  .brand {
+    font-weight: 700;
+    letter-spacing: .14em;
+    font-size: 12px;
+    color: var(--ink);
+  }
+  .brand .dim { color: var(--ink-faint); font-weight: 500; }
+  .ver {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: .08em;
+  }
 
-    button:active {
-      transform: scale(0.97);
-    }
+  /* Body */
+  .body { padding: 14px 16px 4px; }
 
-    .progress {
-      margin-top: 14px;
-      height: 6px;
-      background: #1e293b;
-      border-radius: 10px;
-      overflow: hidden;
-    }
+  .label {
+    font-size: 10px;
+    letter-spacing: .18em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin: 4px 0 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .label::before {
+    content: "";
+    width: 3px; height: 10px;
+    background: var(--emerald);
+    border-radius: 1px;
+  }
 
-    .bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ec4899, #f472b6);
-      transition: width 0.3s ease;
-    }
+  .stack { display: flex; flex-direction: column; gap: 8px; }
 
-    .footer {
-      margin-top: 12px;
-      font-size: 11px;
-      color: #94a3b8;
-    }
+  .card {
+    position: relative;
+    width: 100%;
+    padding: 11px 12px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    text-align: left;
+    transition: border-color .15s ease, transform .08s ease, background .15s ease;
+    overflow: hidden;
+  }
+  .card:hover { border-color: var(--line-2); }
+  .card:active { transform: translateY(1px); }
+  .card:focus-visible {
+    outline: none;
+    border-color: var(--emerald);
+    box-shadow: 0 0 0 2px var(--emerald-glow);
+  }
+  .card::after {
+    content: "";
+    position: absolute; top: 0; left: -100%;
+    width: 80%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.025), transparent);
+    transition: left .5s ease;
+    pointer-events: none;
+  }
+  .card:hover::after { left: 130%; }
 
-  </style>
+  .card .title {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .04em;
+    color: var(--ink);
+  }
+  .card .arrow { color: var(--emerald); font-weight: 700; }
+  .card .key {
+    margin-left: auto;
+    color: var(--ink-faint);
+    font-size: 10px;
+    border: 1px solid var(--line-2);
+    border-radius: 3px;
+    padding: 1px 5px;
+  }
+  .card .desc {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--ink-dim);
+    line-height: 1.4;
+  }
+
+  .card.primary {
+    background: linear-gradient(180deg, rgba(52,211,153,.10), rgba(52,211,153,.02));
+    border-color: rgba(52, 211, 153, .35);
+  }
+  .card.primary:hover {
+    border-color: var(--emerald);
+    background: linear-gradient(180deg, rgba(52,211,153,.16), rgba(52,211,153,.04));
+  }
+  .card.primary .title { color: #ecfdf5; }
+  .card.primary .desc  { color: #a7f3d0; opacity: .8; }
+  .card.primary .key   { border-color: rgba(52,211,153,.35); color: #a7f3d0; }
+
+  .card.danger { border-color: rgba(251, 113, 133, .25); }
+  .card.danger .arrow { color: var(--coral); }
+  .card.danger:hover  { border-color: var(--coral); }
+  .card.danger .title { color: #fecdd3; }
+
+  .card.success { border-color: rgba(52, 211, 153, .35); background: linear-gradient(180deg, rgba(52,211,153,.08), transparent); }
+  .card.success .arrow { color: var(--emerald); }
+  .card.success:hover  { border-color: var(--emerald); }
+  .card.success .title { color: #ecfdf5; }
+
+  /* Counter panel */
+  .counter {
+    margin: 12px 0 14px;
+    padding: 20px 14px 14px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(52,211,153,.12), transparent 70%),
+      var(--bg-2);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .counter::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+    opacity: .7;
+  }
+  .counter .num {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--emerald);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 24px rgba(52, 211, 153, .35);
+    transition: transform .2s ease;
+  }
+  .counter .num.bump { transform: scale(1.08); }
+  .counter .cap {
+    margin-top: 6px;
+    font-size: 10px;
+    letter-spacing: .18em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+  .hint {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--ink-dim);
+    border-left: 2px solid var(--emerald);
+    background: rgba(52, 211, 153, .04);
+    border-radius: 0 3px 3px 0;
+  }
+  .hint b { color: var(--ink); }
+
+  .foot {
+    margin-top: 12px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--line);
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px;
+    color: var(--ink-dim);
+    letter-spacing: .04em;
+    background: rgba(0,0,0,.25);
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    flex-shrink: 0;
+  }
+  .dot.ready { background: var(--emerald); box-shadow: 0 0 0 3px rgba(52,211,153,.18); }
+  .dot.live  { background: var(--emerald); animation: pulse 1.2s infinite; }
+  .dot.warn  { background: var(--amber); }
+  .dot.error { background: var(--coral); }
+  .dot.busy  { background: var(--amber); animation: pulse 1s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,.55); }
+    50%      { box-shadow: 0 0 0 6px rgba(52,211,153,0); }
+  }
+
+  .panel { display: none; animation: fadeIn .18s ease-out; }
+  .panel.on { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(2px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:disabled { opacity: .5; cursor: not-allowed; }
+  .card:disabled:hover { border-color: var(--line); }
+</style>
 </head>
-
 <body>
-  <div class="container">
-    <h2>ChatGPT Exporter</h2>
-    <div class="tagline">Convert chats into clean Markdown</div>
 
-    <button id="export-md">⬇ Download Markdown</button>
+  <header class="head">
+    <div class="mark">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6"  y="5"  width="12" height="1.6" rx=".8" fill="#ecfdf5" opacity=".85"/>
+        <rect x="4"  y="8"  width="16" height="1.6" rx=".8" fill="#ecfdf5"/>
+        <rect x="7"  y="11" width="10" height="1.6" rx=".8" fill="#ecfdf5" opacity=".7"/>
+        <path d="M12 13 v5 m-3 -2 l3 3 l3 -3" stroke="#ecfdf5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="brand">EXPORTER<span class="dim">.MD</span></div>
+    <div class="ver">v2.0</div>
+  </header>
 
-    <div class="progress">
-      <div class="bar" id="bar"></div>
+  <main class="body panel on" id="mainPanel">
+    <div class="label">Export mode</div>
+    <div class="stack">
+
+      <button class="card primary" id="api">
+        <div class="title">
+          <span class="arrow">›</span>
+          <span>EXPORT FULL CHAT</span>
+          <span class="key">1</span>
+        </div>
+        <div class="desc">Calls ChatGPT's internal API — one shot, complete history, no scrolling.</div>
+      </button>
+
+      <button class="card" id="visible">
+        <div class="title">
+          <span class="arrow">›</span>
+          <span>EXPORT VISIBLE</span>
+          <span class="key">2</span>
+        </div>
+        <div class="desc">Snapshot of whatever messages are on screen right now.</div>
+      </button>
+
+      <button class="card" id="scroll">
+        <div class="title">
+          <span class="arrow">›</span>
+          <span>SCROLL CAPTURE</span>
+          <span class="key">3</span>
+        </div>
+        <div class="desc">Fallback. Scroll top→bottom; messages auto-save by stable UUID.</div>
+      </button>
+
+    </div>
+  </main>
+
+  <section class="body panel" id="scrollPanel">
+    <div class="label">Capture in progress</div>
+
+    <div class="counter">
+      <div class="num" id="count">0</div>
+      <div class="cap">messages captured</div>
     </div>
 
-    <div class="footer">
-      v0.1 • Built with ❤️
+    <div class="hint">
+      Scroll the chat from <b>top to bottom</b> slowly. Duplicates are handled by message UUID, so jumping around is fine.
     </div>
-  </div>
+
+    <div class="stack">
+      <button class="card success" id="stopscroll">
+        <div class="title">
+          <span class="arrow">✓</span>
+          <span>STOP &amp; DOWNLOAD</span>
+        </div>
+        <div class="desc">Save everything captured so far as a Markdown file.</div>
+      </button>
+
+      <button class="card danger" id="cancelscroll">
+        <div class="title">
+          <span class="arrow">✕</span>
+          <span>CANCEL</span>
+        </div>
+        <div class="desc">Discard captured messages and return to menu.</div>
+      </button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span class="dot ready" id="dot"></span>
+    <span id="status">READY</span>
+  </footer>
 
   <script src="popup.js"></script>
 </body>
