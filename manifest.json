@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "ChatGPT Exporter",
-  "version": "2.0",
+  "version": "2.0.1",
   "description": "Export ChatGPT conversations to Markdown — full chat via internal API, or scroll-capture fallback.",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab"],
   "icons": {
     "16":  "icons/icon16.png",
     "32":  "icons/icon32.png",
